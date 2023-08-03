@@ -6,6 +6,7 @@ import lombok.Data;
 public class CreateUserPayload {
 
     private String name;
+    
 
     private String email;
 }
