@@ -39,7 +39,7 @@ public class CreditCardController {
         creditCard.setIssuanceBank(payload.getCardIssuanceBank());
         creditCard.setNumber(payload.getCardNumber());
 
-        // Find the user from the database using the payload.getUserId() method (assuming it's implemented)
+        // Find the user from the database using the payload.getUserId() method
         User user = userRepository.findById(payload.getUserId()).orElse(null);
 
         if (user != null) {
@@ -65,7 +65,7 @@ public class CreditCardController {
 
         if (user != null) {
             // Get the list of credit cards associated with the user
-            List<CreditCard> creditCards = user.getCreditCards(); // Use the user.getCreditCards() method
+            List<CreditCard> creditCards = user.getCreditCards();
 
             // Convert the list of CreditCard entities to a list of CreditCardView DTOs
             List<CreditCardView> creditCardViews = creditCards.stream()
