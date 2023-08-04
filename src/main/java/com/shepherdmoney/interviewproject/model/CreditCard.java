@@ -1,17 +1,14 @@
 package com.shepherdmoney.interviewproject.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,10 +23,10 @@ public class CreditCard {
     private int id;
 
     private String issuanceBank;
-
     private String number;
 
     // TODO: Credit card's owner. For detailed hint, please see User class
+    @ManyToOne
     private User user;
 
     // TODO: Credit card's balance history. It is a requirement that the dates in the balanceHistory 
@@ -42,26 +39,23 @@ public class CreditCard {
     //         {date: '2023-04-11', balance: 1000},
     //         {date: '2023-04-10', balance: 800}
     //       ]
-    private List<BalanceHistory> balanceHistory;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("date DESC")
+    private List<BalanceHistory> balanceHistory = new ArrayList<>();
 
     // Method to update the credit card's balance history with a new transaction
     // Method to update the credit card's balance history with a new transaction
     public void updateBalanceHistory(Instant transactionDate, double transactionAmount) {
-        // Get the current balance
         double currentBalance = getBalance();
+        double newBalance = currentBalance + transactionAmount;
 
-        // Create a new balance history entry for the transaction
         BalanceHistory newBalanceHistory = new BalanceHistory();
         newBalanceHistory.setDate(transactionDate);
-        newBalanceHistory.setBalance(currentBalance + transactionAmount);
+        newBalanceHistory.setBalance(newBalance);
 
-        // Add the new balance history entry to the beginning of the list (to maintain chronological order)
         balanceHistory.add(0, newBalanceHistory);
     }
 
-    // Other methods
-
-    // Helper method to get the current balance of the credit card
     public double getBalance() {
         if (!balanceHistory.isEmpty()) {
             return balanceHistory.get(0).getBalance();
@@ -69,6 +63,4 @@ public class CreditCard {
             return 0.0;
         }
     }
-
-
 }

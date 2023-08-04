@@ -20,6 +20,7 @@ public class UserController {
     public ResponseEntity<Integer> createUser(@RequestBody CreateUserPayload payload) {
         // TODO: Create an user entity with information given in the payload, store it in the database
         //       and return the id of the user in 200 OK response
+
         User user = new User();
         user.setName(payload.getName());
         user.setEmail(payload.getEmail());
